@@ -4,13 +4,13 @@ author: "Jonas Schöley"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Calculating Lifespan Equality from Life-tables}
+  %\VignetteIndexEntry{lifequal: Calculating Lifespan Equality from Life-tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-How to install
---------------
+How to install?
+---------------
 
 You can install `lifequal` by running:
 

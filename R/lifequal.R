@@ -1,3 +1,20 @@
+#' lifequal: Calculate Lifespan Equality from Life-tables
+#'
+#' \code{lifequal} lets you calculate three measures of lifespan equality from a
+#' life-table:
+#'
+#' 1) \code{ExDagger(x, ex, wx, ax)} Life expectancy lost by those who die in
+#' age interval [x, x+w)
+#'
+#' 2) \code{EDagger(dx, exdagger, radix)} Total life expectancy lost due to
+#' death
+#'
+#' 3) \code{KeyfzEntro(edagger, e0)} Keyfitz's entropy
+#'
+#' @docType package
+#' @name lifequal
+NULL
+
 #' Life Expectancy Lost in Age x
 #'
 #' Life expectancy lost by those who die in age interval [x, x+w).
