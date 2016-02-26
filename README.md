@@ -10,7 +10,7 @@ lifequal: Calculating Life-table Lifespan Equality
 How to install
 --------------
 
-You can install `lifequal` by running from within an `R` session.
+You can install `lifequal` by running within `R`:
 
 ``` r
 install.packages("devtools")
@@ -18,4 +18,5 @@ devtools::install_github("jschoeley/lifequal")
 ```
 
 Author: Jonas Schöley <jschoeley@health.sdu.dk>
+
 License: GPL-2
