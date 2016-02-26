@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(HMDHFDplus)\nlibrary(dplyr)\n\n# Swedish period life-tables 1x1 ------------------------------------------\n\nreadHMDweb(CNTRY = \"SWE\", item = \"fltper_1x1\",\n           username = \"jona.s@gmx.de\", password = \"1320145677\",\n           fixup = TRUE) -> sweden_f_1x1\n\nreadHMDweb(CNTRY = \"SWE\", item = \"mltper_1x1\",\n           username = \"jona.s@gmx.de\", password = \"1320145677\",\n           fixup = TRUE) -> sweden_m_1x1\n\n# bind female & male lifetables\nbind_rows(female = sweden_f_1x1,\n          male = sweden_m_1x1,\n          .id = \"sex\") %>%\n  # don't include OpenInterval column\n  select(-OpenInterval) %>%\n  # set column names to lowercase\n  rename(period = Year, x = Age) -> sweden1x1\n\n# save to /data\ndevtools::use_data(sweden1x1, overwrite = TRUE, compress = \"xz\")\n\n# Swedish period life-tables 5x5 ------------------------------------------\n\nreadHMDweb(CNTRY = \"SWE\", item = \"fltper_5x5\",\n           username = \"jona.s@gmx.de\", password = \"1320145677\",\n           fixup = TRUE) -> sweden_f_5x5\n\nreadHMDweb(CNTRY = \"SWE\", item = \"mltper_5x5\",\n           username = \"jona.s@gmx.de\", password = \"1320145677\",\n           fixup = TRUE) -> sweden_m_5x5\n\n# bind female & male lifetables\nbind_rows(female = sweden_f_5x5,\n          male = sweden_m_5x5,\n          .id = \"sex\") %>%\n  # don't include OpenInterval column\n  select(-OpenInterval) %>%\n  # set column names to lowercase\n  rename(period = Year, x = Age) %>%\n  # leave out 1751 because it does not adhere to 5-year period aggregation\n  filter(period != 1751) %>%\n  # convert years to year intervals\n  mutate(period = paste(period, period+4, sep = \"-\")) %>%\n  # add interval width for age groups\n  # (last group is open so interval width is NA)\n  group_by(sex, period) %>%\n  mutate(wx = c(1, 4, rep(5, 21), NA)) %>%\n  select(sex, period, x, wx, everything()) %>%\n  ungroup() -> sweden5x5\n\n# save to /data\ndevtools::use_data(sweden5x5, overwrite = TRUE, compress = \"xz\")\n",
+    "created" : 1456401167088.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4215348848",
+    "id" : "6364A1B4",
+    "lastKnownWriteTime" : 1456406605,
+    "last_content_update" : 1456406605938,
+    "path" : "~/lucile/share/jowncloud/sci/rpckg/lifequal/data-raw/lifetables.R",
+    "project_path" : "data-raw/lifetables.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

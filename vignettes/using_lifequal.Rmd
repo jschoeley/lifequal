@@ -1,0 +1,155 @@
+---
+title: "lifequal: Calculating Life-table Lifespan Equality"
+author: "Jonas Schöley"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculating Lifespan Equality from Life-tables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+How to install
+--------------
+
+You can install `lifequal` by running:
+
+```{r eval=FALSE}
+install.packages("devtools")
+devtools::install_github("jschoeley/lifequal")
+```
+
+What does it do?
+----------------
+
+`lifequal` lets you calculate three measures of lifespan equality from a life-table:
+
+  1) `ExDagger(x, ex, wx, ax)`
+  Life expectancy lost by those who die in age interval [x, x+w)
+  2) `EDagger(dx, exdagger, radix)`
+  Total life expectancy lost due to death
+  3) `KeyfzEntro(edagger, e0)`
+  Keyfitz's entropy
+
+They are defined as follows,
+
+--------------------------------------------------------------------------------
+Measure                                    Definition
+------------------------------------------ -------------------------------------
+Start of age interval                      $x$
+
+Width of age interval starting at $x$      $w_x$
+
+Start of last age interval                 $\omega$
+
+Average time spent in age interval         $a_x$
+$[x, x+wx)$ when dying in that interval
+
+Deaths in age interval $[x, x+w_x)$        $d_x$
+
+Life-expectancy at age $x$                 $e_x$
+
+Life expectancy lost due to death in age   $e_x^\dagger = \frac {a_x} {w_x}e_{x+w_x} + (1-\frac {a_x} {w_x}) e_x$
+interval $[x, x+w_x)$
+
+Total life expectancy lost due to death    $e^\dagger = \sum_{x=0}^{\omega} d_x e_x^\dagger$
+
+Keyfitz's Entropy                          $\frac{e^\dagger} {e_0}$
+--------------------------------------------------------------------------------
+
+Life expectancy versus lifespan equality for 1x1 Swedish life-tables
+--------------------------------------------------------------------
+
+```{r, message=FALSE, warning=FALSE}
+library(lifequal)
+library(dplyr)
+library(ggplot2)
+```
+
+The analysis starts with a demographic life-table. We want 1) age groups ordered from low to high, 2) no gaps between subsequent age groups. Something like this:
+
+```{r}
+# Swedish 1x1 period life-tables by period and sex
+sweden1x1
+```
+
+First, we use `ExDagger()` on each single life-table (separate by period and sex) to calculate the life expectancy lost in each age. We then summarise each life-table into a set of 3 numbers: Life expectancy at birth, total life years lost due to death (`EDagger()`) and lifespan equality (`KeyfzEntro()`). Note that we transform Keyfitz's Entropy by taking the negative log.
+
+```{r}
+sweden1x1 %>%
+  # ...for each single life-table...
+  group_by(period, sex) %>%
+  #...we calculate the life years lost in age x...
+  mutate(exdagger = ExDagger(x, ex)) %>%
+  # ...and then summarise each life-table into a set of 3 numbers:
+  # e0:         Life-expectancy at birth
+  # edagger:    Total life years lost due to death
+  # keyfzentro: Lifespan equality
+  summarise(
+    e0         = ex[x == 0],
+    edagger    = EDagger(dx, exdagger, radix = 100000),
+    keyfzentro = -log(KeyfzEntro(edagger, e0))
+  ) -> sweden1x1summary
+```
+
+The summarised life-tables look like this:
+
+```{r}
+sweden1x1summary
+```
+
+For each life-table we plot the life expectancy at birth versus the lifespan equality.
+
+```{r, fig.height=5, fig.width=5}
+plot_lifequal <-
+  ggplot(sweden1x1summary, aes(x = e0, y = keyfzentro, color = sex)) +
+  geom_point(size = 0.6, alpha = 0.5) +
+  theme(aspect.ratio = 1)
+plot_lifequal
+```
+
+Life expectancy versus lifespan equality for 5x5 Swedish life-tables
+--------------------------------------------------------------------
+
+The same exercise as before, only now we deal with life-tables aggregated over multiple year period and age intervals.
+
+```{r}
+# Swedish 5x5 period life-tables by period and sex
+sweden5x5
+```
+
+We deal with this aggregation by informing `ExDagger()` about $w_x$, the width of each age interval. This information is included in the column `wx` of our life-table.
+
+```{r}
+sweden5x5 %>%
+  # for practicality we assume a width of 2
+  # years for the last open age group 110+
+  mutate(wx = ifelse(is.na(wx), 2, wx)) %>%
+  # ...for each single life-table...
+  group_by(period, sex) %>%
+  #...we calculate the life years lost in age interval [x, x+wx)...
+  mutate(exdagger = ExDagger(x, ex, wx, ax)) %>%
+  # ...and then summarise each life-table into a set of 3 numbers:
+  # e0:         Life-expectancy at birth
+  # edagger:    Total life years lost due to death
+  # keyfzentro: Lifespan equality
+  summarise(
+    e0         = ex[x == 0],
+    edagger    = EDagger(dx, exdagger, radix = 100000),
+    keyfzentro = -log(KeyfzEntro(edagger, e0))
+  ) -> sweden5x5summary
+```
+
+The summarised life-tables look like this:
+
+```{r}
+sweden5x5summary
+```
+
+The aggregated life-tables follow the same trend as the single year life-tables.
+
+```{r, fig.height=5, fig.width=5}
+plot_lifequal +
+  geom_point(shape = 22, fill = "white",
+             data = sweden5x5summary)
+```
