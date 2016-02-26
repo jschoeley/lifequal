@@ -2,7 +2,7 @@
 title: "lifequal: Calculating Life-table Lifespan Equality"
 author: "Jonas Schöley"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{lifequal: Calculating Lifespan Equality from Life-tables}
   %\VignetteEngine{knitr::rmarkdown}
