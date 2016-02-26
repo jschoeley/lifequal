@@ -1,7 +1,7 @@
 Package: lifequal
 Type: Package
 Title: Calculate Lifespan Equality from Life-tables
-Version: 0.1.0
+Version: 0.2.0
 Author: Jonas Schoeley
 Maintainer: Jonas Schoeley <jschoeley@health.sdu.dk>
 Description: Functions for calculating different measures of lifespan equality from demographic life-tables.

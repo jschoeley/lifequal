@@ -49,7 +49,7 @@ Deaths in age interval $[x, x+w_x)$        $d_x$
 
 Life-expectancy at age $x$                 $e_x$
 
-Life expectancy lost due to death in age   $e_x^\dagger = \frac {a_x} {w_x}e_{x+w_x} + (1-\frac {a_x} {w_x}) e_x$
+Life expectancy lost due to death in age   $$e_x^\dagger = \begin{cases} \frac {a_x} {w_x}e_{x+w_x} + (1-\frac {a_x} {w_x}) e_x & x \neq \omega \\ e_\omega & x = \omega \\ \end{cases}$$
 interval $[x, x+w_x)$
 
 Total life expectancy lost due to death    $e^\dagger = \sum_{x=0}^{\omega} d_x e_x^\dagger$
@@ -122,9 +122,6 @@ We deal with this aggregation by informing `ExDagger()` about $w_x$, the width o
 
 ```{r}
 sweden5x5 %>%
-  # for practicality we assume a width of 2
-  # years for the last open age group 110+
-  mutate(wx = ifelse(is.na(wx), 2, wx)) %>%
   # ...for each single life-table...
   group_by(period, sex) %>%
   #...we calculate the life years lost in age interval [x, x+wx)...

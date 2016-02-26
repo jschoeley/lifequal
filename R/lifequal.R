@@ -3,11 +3,11 @@
 #' \code{lifequal} lets you calculate three measures of lifespan equality from a
 #' life-table:
 #'
-#' 1) \code{ExDagger(x, ex, wx, ax)} Life expectancy lost by those who die in
-#' age interval [x, x+w)
+#' 1) \code{ExDagger(x, ex, wx, ax)}
+#'   Life expectancy lost by those who die in age interval [x, x+w)
 #'
-#' 2) \code{EDagger(dx, exdagger, radix)} Total life expectancy lost due to
-#' death
+#' 2) \code{EDagger(dx, exdagger, radix)}
+#'   Total life expectancy lost due to death
 #'
 #' 3) \code{KeyfzEntro(edagger, e0)} Keyfitz's entropy
 #'
@@ -24,31 +24,31 @@ NULL
 #' @param wx width of age interval x [x, x+wx)
 #' @param ax average time spent in age interval x before dying in that interval
 #'
-#' @details We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-#'   standard format lifetable: 1) age groups are ordered from low to high. 2)
-#'   there are no gaps between subsequent age groups. 3) The last age group is
-#'   open to the right.
+#' @details
+#'   We assume that `x`, `ex`, `wx` and `ax` are columns of a single
+#'   standard format lifetable: 1) age groups are ordered from low to high, 2)
+#'   there are no gaps between subsequent age groups.
+#'
+#'   We define exdagger to be equal to ex for the last age group.
 #'
 #'   If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5
 #'   are assumed.
 #'
 #' @examples
-#' # life expectancy lost in age x for a 1x1 lifetable of Swedish females
-#' swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-#' ExDagger(x = swe$x, ex = swe$ex)
+#'   # life expectancy lost in age x for a 1x1 lifetable of Swedish females
+#'   swe <- subset(sweden1x1, period == 1757 & sex == "female")
+#'   ExDagger(x = swe$x, ex = swe$ex)
 #'
-#' # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
-#' swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#' swe$wx[is.na(swe$wx)] <- 2 # last age group (110+) is assumed to be 2 years wide
-#' ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+#'   # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
+#'   swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#'   ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
 #'
 #' @export
 ExDagger <- function (x, ex, wx = 1, ax = 0.5) {
-  exwx <- c(ex[-1], ex[length(ex)])
   A <- ax/wx
-  return(
-    A * exwx + (1 - A) * ex
-  )
+  exdagger <- A * c(ex[-1], NA) + (1 - A) * ex
+  exdagger[length(exdagger)] <- ex[length(ex)]
+  return(exdagger)
 }
 
 #' Total Life Expectancy Lost
@@ -60,16 +60,15 @@ ExDagger <- function (x, ex, wx = 1, ax = 0.5) {
 #' @param radix    initial lifetable population (dx scaling factor)
 #'
 #' @examples
-#' # total life expectancy lost for a 1x1 lifetable of Swedish females
-#' swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-#' exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-#' EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#'   # total life expectancy lost for a 1x1 lifetable of Swedish females
+#'   swe <- subset(sweden1x1, period == 1757 & sex == "female")
+#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+#'   EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 #'
-#' # total life expectancy lost for a 5x5 lifetable of Swedish females
-#' swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#' swe$wx[is.na(swe$wx)] <- 2 # last age group (110+) is assumed to be 2 years wide
-#' exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-#' EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#'   # total life expectancy lost for a 5x5 lifetable of Swedish females
+#'   swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+#'   EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 #'
 #' @export
 EDagger <- function (dx, exdagger, radix = 1) {
@@ -86,18 +85,17 @@ EDagger <- function (dx, exdagger, radix = 1) {
 #' @param e0      life expectancy at birth
 #'
 #' @examples
-#' # lifespan equality for a 1x1 lifetable of Swedish females
-#' swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-#' exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-#' edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-#' KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+#'   # lifespan equality for a 1x1 lifetable of Swedish females
+#'   swe      <- subset(sweden1x1, period == 1757 & sex == "female")
+#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+#'   edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#'   KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 #'
-#' # lifespan equality for a 5x5 lifetable of Swedish females
-#' swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#' swe$wx[is.na(swe$wx)] <- 2 # last age group (110+) is assumed to be 2 years wide
-#' exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-#' edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-#' KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+#'   # lifespan equality for a 5x5 lifetable of Swedish females
+#'   swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+#'   edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#'   KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 #'
 #' @export
 KeyfzEntro <- function (edagger, e0) {
@@ -115,22 +113,24 @@ KeyfzEntro <- function (edagger, e0) {
 #'   The dataset has been altered from the original form provided by the Human
 #'   Mortality database.
 #'
-#' @format A data frame with 58,608 rows and 11 variables:
-#' \describe{
-#'   \item{sex}{females or males}
-#'   \item{period}{period in years}
-#'   \item{x}{start of age interval in years}
-#'   \item{mx}{mortality rate in age interval [x, x+wx)}
-#'   \item{qx}{probability of death in age interval [x, x+wx)}
-#'   \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
-#'   \item{lx}{survivors at age x}
-#'   \item{dx}{deaths in age interval [x, x+wx)}
-#'   \item{Lx}{total person-years lived in age interval [x, x+wx)}
-#'   \item{Tx}{total person-years yet to live starting age x}
-#'   \item{ex}{life-expectancy at age x}
-#' }
+#' @format
+#'   A data frame with 58,608 rows and 11 variables:
+#'   \describe{
+#'     \item{sex}{females or males}
+#'     \item{period}{period in years}
+#'     \item{x}{start of age interval in years}
+#'     \item{mx}{mortality rate in age interval [x, x+wx)}
+#'     \item{qx}{probability of death in age interval [x, x+wx)}
+#'     \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+#'     \item{lx}{survivors at age x}
+#'     \item{dx}{deaths in age interval [x, x+wx)}
+#'     \item{Lx}{total person-years lived in age interval [x, x+wx)}
+#'     \item{Tx}{total person-years yet to live starting age x}
+#'     \item{ex}{life-expectancy at age x}
+#'   }
 #'
-#' @source The Human Mortality Database \url{http://www.mortality.org/}
+#' @source
+#'   The Human Mortality Database \url{http://www.mortality.org/}
 "sweden1x1"
 
 #' Five Year Period Life-tables for Sweden 1755-2014 by Sex
@@ -144,21 +144,23 @@ KeyfzEntro <- function (edagger, e0) {
 #'   The dataset has been altered from the original form provided by the Human
 #'   Mortality database.
 #'
-#' @format A data frame with 2,496 rows and 12 variables:
-#' \describe{
-#'   \item{sex}{females or males}
-#'   \item{period}{period range in years [start, end]}
-#'   \item{x}{start of age interval in years}
-#'   \item{wx}{width of age interval in years}
-#'   \item{mx}{mortality rate in age interval [x, x+wx)}
-#'   \item{qx}{probability of death in age interval [x, x+wx)}
-#'   \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
-#'   \item{lx}{survivors at age x}
-#'   \item{dx}{deaths in age interval [x, x+wx)}
-#'   \item{Lx}{total person-years lived in age interval [x, x+wx)}
-#'   \item{Tx}{total person-years yet to live starting age x}
-#'   \item{ex}{life-expectancy at age x}
-#' }
+#' @format
+#'   A data frame with 2,496 rows and 12 variables:
+#'   \describe{
+#'     \item{sex}{females or males}
+#'     \item{period}{period range in years [start, end]}
+#'     \item{x}{start of age interval in years}
+#'     \item{wx}{width of age interval in years}
+#'     \item{mx}{mortality rate in age interval [x, x+wx)}
+#'     \item{qx}{probability of death in age interval [x, x+wx)}
+#'     \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+#'     \item{lx}{survivors at age x}
+#'     \item{dx}{deaths in age interval [x, x+wx)}
+#'     \item{Lx}{total person-years lived in age interval [x, x+wx)}
+#'     \item{Tx}{total person-years yet to live starting age x}
+#'     \item{ex}{life-expectancy at age x}
+#'   }
 #'
-#' @source The Human Mortality Database \url{http://www.mortality.org/}
+#' @source
+#'   The Human Mortality Database \url{http://www.mortality.org/}
 "sweden5x5"

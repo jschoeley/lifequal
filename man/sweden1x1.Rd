@@ -5,19 +5,19 @@
 \alias{sweden1x1}
 \title{Single Year Period Life-tables for Sweden 1751-2014 by Sex}
 \format{A data frame with 58,608 rows and 11 variables:
-\describe{
-  \item{sex}{females or males}
-  \item{period}{period in years}
-  \item{x}{start of age interval in years}
-  \item{mx}{mortality rate in age interval [x, x+wx)}
-  \item{qx}{probability of death in age interval [x, x+wx)}
-  \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
-  \item{lx}{survivors at age x}
-  \item{dx}{deaths in age interval [x, x+wx)}
-  \item{Lx}{total person-years lived in age interval [x, x+wx)}
-  \item{Tx}{total person-years yet to live starting age x}
-  \item{ex}{life-expectancy at age x}
-}}
+  \describe{
+    \item{sex}{females or males}
+    \item{period}{period in years}
+    \item{x}{start of age interval in years}
+    \item{mx}{mortality rate in age interval [x, x+wx)}
+    \item{qx}{probability of death in age interval [x, x+wx)}
+    \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+    \item{lx}{survivors at age x}
+    \item{dx}{deaths in age interval [x, x+wx)}
+    \item{Lx}{total person-years lived in age interval [x, x+wx)}
+    \item{Tx}{total person-years yet to live starting age x}
+    \item{ex}{life-expectancy at age x}
+  }}
 \source{
 The Human Mortality Database \url{http://www.mortality.org/}
 }

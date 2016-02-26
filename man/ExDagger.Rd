@@ -20,22 +20,22 @@ Life expectancy lost by those who die in age interval [x, x+w).
 }
 \details{
 We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-  standard format lifetable: 1) age groups are ordered from low to high. 2)
-  there are no gaps between subsequent age groups. 3) The last age group is
-  open to the right.
+  standard format lifetable: 1) age groups are ordered from low to high, 2)
+  there are no gaps between subsequent age groups.
+
+  We define exdagger to be equal to ex for the last age group.
 
   If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5
   are assumed.
 }
 \examples{
-# life expectancy lost in age x for a 1x1 lifetable of Swedish females
-swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-ExDagger(x = swe$x, ex = swe$ex)
+  # life expectancy lost in age x for a 1x1 lifetable of Swedish females
+  swe <- subset(sweden1x1, period == 1757 & sex == "female")
+  ExDagger(x = swe$x, ex = swe$ex)
 
-# life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
-swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-swe$wx[is.na(swe$wx)] <- 2 # last age group (110+) is assumed to be 2 years wide
-ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+  # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
+  swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+  ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
 
 }
 

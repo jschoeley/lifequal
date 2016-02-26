@@ -10,11 +10,11 @@
 life-table:
 }
 \details{
-1) \code{ExDagger(x, ex, wx, ax)} Life expectancy lost by those who die in
-age interval [x, x+w)
+1) \code{ExDagger(x, ex, wx, ax)}
+  Life expectancy lost by those who die in age interval [x, x+w)
 
-2) \code{EDagger(dx, exdagger, radix)} Total life expectancy lost due to
-death
+2) \code{EDagger(dx, exdagger, radix)}
+  Total life expectancy lost due to death
 
 3) \code{KeyfzEntro(edagger, e0)} Keyfitz's entropy
 }

@@ -5,20 +5,20 @@
 \alias{sweden5x5}
 \title{Five Year Period Life-tables for Sweden 1755-2014 by Sex}
 \format{A data frame with 2,496 rows and 12 variables:
-\describe{
-  \item{sex}{females or males}
-  \item{period}{period range in years [start, end]}
-  \item{x}{start of age interval in years}
-  \item{wx}{width of age interval in years}
-  \item{mx}{mortality rate in age interval [x, x+wx)}
-  \item{qx}{probability of death in age interval [x, x+wx)}
-  \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
-  \item{lx}{survivors at age x}
-  \item{dx}{deaths in age interval [x, x+wx)}
-  \item{Lx}{total person-years lived in age interval [x, x+wx)}
-  \item{Tx}{total person-years yet to live starting age x}
-  \item{ex}{life-expectancy at age x}
-}}
+  \describe{
+    \item{sex}{females or males}
+    \item{period}{period range in years [start, end]}
+    \item{x}{start of age interval in years}
+    \item{wx}{width of age interval in years}
+    \item{mx}{mortality rate in age interval [x, x+wx)}
+    \item{qx}{probability of death in age interval [x, x+wx)}
+    \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+    \item{lx}{survivors at age x}
+    \item{dx}{deaths in age interval [x, x+wx)}
+    \item{Lx}{total person-years lived in age interval [x, x+wx)}
+    \item{Tx}{total person-years yet to live starting age x}
+    \item{ex}{life-expectancy at age x}
+  }}
 \source{
 The Human Mortality Database \url{http://www.mortality.org/}
 }
