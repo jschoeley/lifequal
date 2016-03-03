@@ -22,17 +22,20 @@ NULL
 #' @param x  start of age interval
 #' @param ex life expectancy at age x
 #' @param wx width of age interval x [x, x+wx)
-#' @param ax average time spent in age interval x before dying in that interval
+#' @param ax fraction of time spent in age interval x before dying in that
+#'   interval
 #'
-#' @details
-#'   We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-#'   standard format lifetable: 1) age groups are ordered from low to high, 2)
-#'   there are no gaps between subsequent age groups.
+#' @details We assume that `x`, `ex`, `wx` and `ax` are columns of a single
+#' standard format lifetable: 1) age groups are ordered from low to high, 2)
+#' there are no gaps between subsequent age groups, 3) the last age group is
+#' open to the right (e.g. 110+).
 #'
-#'   We define exdagger to be equal to ex for the last age group.
+#' For the last age group omega we define:
 #'
-#'   If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5
-#'   are assumed.
+#' edagger(omega) = [e(omega) + 1.4] / 2
+#'
+#' If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5 are
+#' assumed.
 #'
 #' @examples
 #'   # life expectancy lost in age x for a 1x1 lifetable of Swedish females
@@ -47,7 +50,9 @@ NULL
 ExDagger <- function (x, ex, wx = 1, ax = 0.5) {
   A <- ax/wx
   exdagger <- A * c(ex[-1], NA) + (1 - A) * ex
-  exdagger[length(exdagger)] <- ex[length(ex)]
+  # special calculation for last age group
+  exdagger[length(exdagger)] <- (ex[length(ex)] + 1.4) / 2
+
   return(exdagger)
 }
 
@@ -121,7 +126,7 @@ KeyfzEntro <- function (edagger, e0) {
 #'     \item{x}{start of age interval in years}
 #'     \item{mx}{mortality rate in age interval [x, x+wx)}
 #'     \item{qx}{probability of death in age interval [x, x+wx)}
-#'     \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+#'     \item{ax}{fraction of time spent in age interval [x, x+wx) when dying in that interval}
 #'     \item{lx}{survivors at age x}
 #'     \item{dx}{deaths in age interval [x, x+wx)}
 #'     \item{Lx}{total person-years lived in age interval [x, x+wx)}
@@ -153,7 +158,7 @@ KeyfzEntro <- function (edagger, e0) {
 #'     \item{wx}{width of age interval in years}
 #'     \item{mx}{mortality rate in age interval [x, x+wx)}
 #'     \item{qx}{probability of death in age interval [x, x+wx)}
-#'     \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+#'     \item{ax}{fraction of time spent in age interval [x, x+wx) when dying in that interval}
 #'     \item{lx}{survivors at age x}
 #'     \item{dx}{deaths in age interval [x, x+wx)}
 #'     \item{Lx}{total person-years lived in age interval [x, x+wx)}

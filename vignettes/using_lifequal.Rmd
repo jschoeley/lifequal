@@ -49,7 +49,7 @@ Deaths in age interval $[x, x+w_x)$        $d_x$
 
 Life-expectancy at age $x$                 $e_x$
 
-Life expectancy lost due to death in age   $$e_x^\dagger = \begin{cases} \frac {a_x} {w_x}e_{x+w_x} + (1-\frac {a_x} {w_x}) e_x & x \neq \omega \\ e_\omega & x = \omega \\ \end{cases}$$
+Life expectancy lost due to death in age   $$e_x^\dagger = \begin{cases} \frac {a_x} {w_x}e_{x+w_x} + (1-\frac {a_x} {w_x}) e_x & x \neq \omega \\ \frac{e_\omega + 1.4}{2} & x = \omega \\ \end{cases}$$
 interval $[x, x+w_x)$
 
 Total life expectancy lost due to death    $e^\dagger = \sum_{x=0}^{\omega} d_x e_x^\dagger$
@@ -66,7 +66,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
-The analysis starts with a demographic life-table. We want 1) age groups ordered from low to high, 2) no gaps between subsequent age groups. Something like this:
+The analysis starts with a demographic life-table. We want 1) age intervals ordered from low to high, 2) no gaps between subsequent age intervals, 3) an open last age group (e.g. 110+). Something like this:
 
 ```{r}
 # Swedish 1x1 period life-tables by period and sex

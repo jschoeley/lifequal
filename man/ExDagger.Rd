@@ -13,20 +13,24 @@ ExDagger(x, ex, wx = 1, ax = 0.5)
 
 \item{wx}{width of age interval x [x, x+wx)}
 
-\item{ax}{average time spent in age interval x before dying in that interval}
+\item{ax}{fraction of time spent in age interval x before dying in that
+interval}
 }
 \description{
 Life expectancy lost by those who die in age interval [x, x+w).
 }
 \details{
 We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-  standard format lifetable: 1) age groups are ordered from low to high, 2)
-  there are no gaps between subsequent age groups.
+standard format lifetable: 1) age groups are ordered from low to high, 2)
+there are no gaps between subsequent age groups, 3) the last age group is
+open to the right (e.g. 110+).
 
-  We define exdagger to be equal to ex for the last age group.
+For the last age group omega we define:
 
-  If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5
-  are assumed.
+edagger(omega) = [e(omega) + 1.4] / 2
+
+If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5 are
+assumed.
 }
 \examples{
   # life expectancy lost in age x for a 1x1 lifetable of Swedish females

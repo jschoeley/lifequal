@@ -12,7 +12,7 @@
     \item{wx}{width of age interval in years}
     \item{mx}{mortality rate in age interval [x, x+wx)}
     \item{qx}{probability of death in age interval [x, x+wx)}
-    \item{ax}{average time spent in age interval [x, x+wx) when dying in that interval}
+    \item{ax}{fraction of time spent in age interval [x, x+wx) when dying in that interval}
     \item{lx}{survivors at age x}
     \item{dx}{deaths in age interval [x, x+wx)}
     \item{Lx}{total person-years lived in age interval [x, x+wx)}
