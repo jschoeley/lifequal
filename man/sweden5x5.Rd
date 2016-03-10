@@ -9,7 +9,6 @@
     \item{sex}{females or males}
     \item{period}{period range in years [start, end]}
     \item{x}{start of age interval in years}
-    \item{wx}{width of age interval in years}
     \item{mx}{mortality rate in age interval [x, x+wx)}
     \item{qx}{probability of death in age interval [x, x+wx)}
     \item{ax}{fraction of time spent in age interval [x, x+wx) when dying in that interval}

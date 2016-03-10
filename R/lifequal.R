@@ -3,7 +3,7 @@
 #' \code{lifequal} lets you calculate three measures of lifespan equality from a
 #' life-table:
 #'
-#' 1) \code{ExDagger(x, ex, wx, ax)}
+#' 1) \code{ExDagger(x, ex, ax)}
 #'   Life expectancy lost by those who die in age interval [x, x+w)
 #'
 #' 2) \code{EDagger(dx, exdagger, radix)}
@@ -21,36 +21,35 @@ NULL
 #'
 #' @param x  start of age interval
 #' @param ex life expectancy at age x
-#' @param wx width of age interval x [x, x+wx)
 #' @param ax fraction of time spent in age interval x before dying in that
 #'   interval
 #'
-#' @details We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-#' standard format lifetable: 1) age groups are ordered from low to high, 2)
-#' there are no gaps between subsequent age groups, 3) the last age group is
-#' open to the right (e.g. 110+).
+#' @details We assume that `x`, `ex` and `ax` are columns of a single, standard
+#'   format lifetable: 1) ages are ordered from low to high, 2) there are no
+#'   gaps between subsequent age intervals, 3) the last age interval is open to
+#'   the right (e.g. 110+).
 #'
-#' For the last age group omega we define:
+#'   The age interval widths are calculated automatically as the difference
+#'   between the starting points of the age intervals `x`.
 #'
-#' edagger(omega) = [e(omega) + 1.4] / 2
-#'
-#' If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5 are
-#' assumed.
+#'   For the last age interval omega we define:
+#'   edagger(omega) = [e(omega) + 1.4] / 2
 #'
 #' @examples
-#'   # life expectancy lost in age x for a 1x1 lifetable of Swedish females
-#'   swe <- subset(sweden1x1, period == 1757 & sex == "female")
-#'   ExDagger(x = swe$x, ex = swe$ex)
+#' # life expectancy lost in age x for a 1x1 lifetable of Swedish females
+#' swe <- subset(sweden1x1, period == 1757 & sex == "female")
+#' ExDagger(x = swe$x, ex = swe$ex)
 #'
-#'   # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
-#'   swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#'   ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+#' # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
+#' swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#' ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
 #'
 #' @export
-ExDagger <- function (x, ex, wx = 1, ax = 0.5) {
+ExDagger <- function (x, ex, ax = 0.5) {
+  wx <- c(diff(x), NA) # assumes no gaps between age intervals
   A <- ax/wx
   exdagger <- A * c(ex[-1], NA) + (1 - A) * ex
-  # special calculation for last age group
+  # special calculation for last age interval
   exdagger[length(exdagger)] <- (ex[length(ex)] + 1.4) / 2
 
   return(exdagger)
@@ -65,15 +64,15 @@ ExDagger <- function (x, ex, wx = 1, ax = 0.5) {
 #' @param radix    initial lifetable population (dx scaling factor)
 #'
 #' @examples
-#'   # total life expectancy lost for a 1x1 lifetable of Swedish females
-#'   swe <- subset(sweden1x1, period == 1757 & sex == "female")
-#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-#'   EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#' # total life expectancy lost for a 1x1 lifetable of Swedish females
+#' swe <- subset(sweden1x1, period == 1757 & sex == "female")
+#' exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+#' EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 #'
-#'   # total life expectancy lost for a 5x5 lifetable of Swedish females
-#'   swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-#'   EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#' # total life expectancy lost for a 5x5 lifetable of Swedish females
+#' swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#' exdagger <- ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
+#' EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 #'
 #' @export
 EDagger <- function (dx, exdagger, radix = 1) {
@@ -90,17 +89,17 @@ EDagger <- function (dx, exdagger, radix = 1) {
 #' @param e0      life expectancy at birth
 #'
 #' @examples
-#'   # lifespan equality for a 1x1 lifetable of Swedish females
-#'   swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-#'   edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-#'   KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+#' # lifespan equality for a 1x1 lifetable of Swedish females
+#' swe      <- subset(sweden1x1, period == 1757 & sex == "female")
+#' exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+#' edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#' KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 #'
-#'   # lifespan equality for a 5x5 lifetable of Swedish females
-#'   swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-#'   exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-#'   edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-#'   KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+#' # lifespan equality for a 5x5 lifetable of Swedish females
+#' swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+#' exdagger <- ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
+#' edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+#' KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 #'
 #' @export
 KeyfzEntro <- function (edagger, e0) {
@@ -155,7 +154,6 @@ KeyfzEntro <- function (edagger, e0) {
 #'     \item{sex}{females or males}
 #'     \item{period}{period range in years [start, end]}
 #'     \item{x}{start of age interval in years}
-#'     \item{wx}{width of age interval in years}
 #'     \item{mx}{mortality rate in age interval [x, x+wx)}
 #'     \item{qx}{probability of death in age interval [x, x+wx)}
 #'     \item{ax}{fraction of time spent in age interval [x, x+wx) when dying in that interval}

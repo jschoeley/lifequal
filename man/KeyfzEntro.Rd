@@ -15,17 +15,17 @@ KeyfzEntro(edagger, e0)
 A measure for the lifespan equality in a population.
 }
 \examples{
-  # lifespan equality for a 1x1 lifetable of Swedish females
-  swe      <- subset(sweden1x1, period == 1757 & sex == "female")
-  exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-  edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-  KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+# lifespan equality for a 1x1 lifetable of Swedish females
+swe      <- subset(sweden1x1, period == 1757 & sex == "female")
+exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 
-  # lifespan equality for a 5x5 lifetable of Swedish females
-  swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-  exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-  edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
-  KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
+# lifespan equality for a 5x5 lifetable of Swedish females
+swe      <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+exdagger <- ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
+edagger  <- EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+KeyfzEntro(edagger = edagger, e0 = swe$ex[1])
 
 }
 

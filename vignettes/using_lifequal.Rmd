@@ -24,7 +24,7 @@ What does it do?
 
 `lifequal` lets you calculate three measures of lifespan equality from a life-table:
 
-  1) `ExDagger(x, ex, wx, ax)`
+  1) `ExDagger(x, ex, ax)`
   Life expectancy lost by those who die in age interval [x, x+w)
   2) `EDagger(dx, exdagger, radix)`
   Total life expectancy lost due to death
@@ -66,7 +66,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
-The analysis starts with a demographic life-table. We want 1) age intervals ordered from low to high, 2) no gaps between subsequent age intervals, 3) an open last age group (e.g. 110+). Something like this:
+The analysis starts with a demographic life-table. We want 1) age intervals ordered from low to high, 2) no gaps between subsequent age intervals, 3) an open last age interval (e.g. 110+). Something like this:
 
 ```{r}
 # Swedish 1x1 period life-tables by period and sex
@@ -118,14 +118,14 @@ The same exercise as before, only now we deal with life-tables aggregated over m
 sweden5x5
 ```
 
-We deal with this aggregation by informing `ExDagger()` about $w_x$, the width of each age interval. This information is included in the column `wx` of our life-table.
+The width of each age interval, $w_x$, is calculated by the `ExDagger()` function on the basis of the differences between the age interval starting points `x`.
 
 ```{r}
 sweden5x5 %>%
   # ...for each single life-table...
   group_by(period, sex) %>%
   #...we calculate the life years lost in age interval [x, x+wx)...
-  mutate(exdagger = ExDagger(x, ex, wx, ax)) %>%
+  mutate(exdagger = ExDagger(x, ex, ax)) %>%
   # ...and then summarise each life-table into a set of 3 numbers:
   # e0:         Life-expectancy at birth
   # edagger:    Total life years lost due to death

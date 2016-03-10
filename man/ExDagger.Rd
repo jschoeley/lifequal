@@ -4,14 +4,12 @@
 \alias{ExDagger}
 \title{Life Expectancy Lost in Age x}
 \usage{
-ExDagger(x, ex, wx = 1, ax = 0.5)
+ExDagger(x, ex, ax = 0.5)
 }
 \arguments{
 \item{x}{start of age interval}
 
 \item{ex}{life expectancy at age x}
-
-\item{wx}{width of age interval x [x, x+wx)}
 
 \item{ax}{fraction of time spent in age interval x before dying in that
 interval}
@@ -20,26 +18,25 @@ interval}
 Life expectancy lost by those who die in age interval [x, x+w).
 }
 \details{
-We assume that `x`, `ex`, `wx` and `ax` are columns of a single
-standard format lifetable: 1) age groups are ordered from low to high, 2)
-there are no gaps between subsequent age groups, 3) the last age group is
-open to the right (e.g. 110+).
+We assume that `x`, `ex` and `ax` are columns of a single, standard
+  format lifetable: 1) ages are ordered from low to high, 2) there are no
+  gaps between subsequent age intervals, 3) the last age interval is open to
+  the right (e.g. 110+).
 
-For the last age group omega we define:
+  The age interval widths are calculated automatically as the difference
+  between the starting points of the age intervals `x`.
 
-edagger(omega) = [e(omega) + 1.4] / 2
-
-If only `x` and `ex` are specified an age interval of 1, and an ax of 0.5 are
-assumed.
+  For the last age interval omega we define:
+  edagger(omega) = [e(omega) + 1.4] / 2
 }
 \examples{
-  # life expectancy lost in age x for a 1x1 lifetable of Swedish females
-  swe <- subset(sweden1x1, period == 1757 & sex == "female")
-  ExDagger(x = swe$x, ex = swe$ex)
+# life expectancy lost in age x for a 1x1 lifetable of Swedish females
+swe <- subset(sweden1x1, period == 1757 & sex == "female")
+ExDagger(x = swe$x, ex = swe$ex)
 
-  # life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
-  swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-  ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
+# life expectancy lost in age [x,x+wx) for a 5x5 lifetable of Swedish females
+swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
 
 }
 

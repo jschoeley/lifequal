@@ -17,15 +17,15 @@ EDagger(dx, exdagger, radix = 1)
 Life expectancy lost due to death.
 }
 \examples{
-  # total life expectancy lost for a 1x1 lifetable of Swedish females
-  swe <- subset(sweden1x1, period == 1757 & sex == "female")
-  exdagger <- ExDagger(x = swe$x, ex = swe$ex)
-  EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+# total life expectancy lost for a 1x1 lifetable of Swedish females
+swe <- subset(sweden1x1, period == 1757 & sex == "female")
+exdagger <- ExDagger(x = swe$x, ex = swe$ex)
+EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 
-  # total life expectancy lost for a 5x5 lifetable of Swedish females
-  swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
-  exdagger <- ExDagger(x = swe$x, ex = swe$ex, wx = swe$wx, ax = swe$ax)
-  EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
+# total life expectancy lost for a 5x5 lifetable of Swedish females
+swe <- subset(sweden5x5, period == "1755-1759" & sex == "female")
+exdagger <- ExDagger(x = swe$x, ex = swe$ex, ax = swe$ax)
+EDagger(dx = swe$dx, exdagger = exdagger, radix = 100000)
 
 }
 

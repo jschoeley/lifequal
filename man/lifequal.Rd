@@ -10,7 +10,7 @@
 life-table:
 }
 \details{
-1) \code{ExDagger(x, ex, wx, ax)}
+1) \code{ExDagger(x, ex, ax)}
   Life expectancy lost by those who die in age interval [x, x+w)
 
 2) \code{EDagger(dx, exdagger, radix)}
